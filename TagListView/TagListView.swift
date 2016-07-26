@@ -91,6 +91,10 @@ public class TagListView: UIView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         
+        relayoutSubviews()
+    }
+    
+    public func relayoutSubviews() {
         refreshStyle()
         rearrangeViews()
     }
@@ -102,7 +106,7 @@ public class TagListView: UIView {
         setupShowMore()
     }
     
-    private func rearrangeViews() {
+    private func rearrangeViews() {        
         let views = tagViews as [UIView] + tagBackgroundViews + rowViews
         for view in views {
             view.removeFromSuperview()
