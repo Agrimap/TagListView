@@ -155,6 +155,12 @@ public class TagView: UIButton {
         setupView()
     }
     
+    public init() {
+        super.init(frame: CGRectZero)
+        
+        setupView()
+    }
+    
     public init(title: String) {
         super.init(frame: CGRectZero)
         setTitle(title, forState: .Normal)

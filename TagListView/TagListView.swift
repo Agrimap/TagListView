@@ -10,11 +10,66 @@ import UIKit
 
 @objc public protocol TagListViewDelegate {
     optional func tagPressed(title: String, tagView: TagView, sender: TagListView) -> Void
+    optional func didTappedShowMore(sender: TagListView)
     optional func tagRemoveButtonPressed(title: String, tagView: TagView, sender: TagListView) -> Void
 }
 
 @IBDesignable
 public class TagListView: UIView {
+    
+    var generalLineNumber:UInt = 1
+    private var showMore: TagView = TagView()
+    
+    func initData() {
+        clipsToBounds = true
+        setupShowMore()
+        showMore.onTap = { [weak self] _ in
+            self?.lineNumber = self?.lineNumber == self?.generalLineNumber ? 0 : self?.generalLineNumber            
+            self?.delegate?.didTappedShowMore?(self!)
+        }
+    }
+    
+    public init() {
+        super.init(frame: CGRectZero)
+        initData()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        initData()
+    }
+    
+    @IBInspectable public dynamic var showMoreTextColor: UIColor = UIColor.grayColor() {
+        didSet {
+            showMore.textColor = showMoreTextColor
+            showMore.selectedTextColor = showMoreTextColor
+        }
+    }
+    
+    @IBInspectable public dynamic var showMoreFont: UIFont = UIFont.systemFontOfSize(3) {
+        didSet {
+            showMore.textFont = showMoreFont
+        }
+    }
+    
+    @IBInspectable public dynamic var showMoreBorderWidth: CGFloat = 0 {
+        didSet {
+            showMore.borderWidth = showMoreBorderWidth
+        }
+    }
+    
+    @IBInspectable public dynamic var showMorePaddingX: CGFloat = 5 {
+        didSet {
+            showMore.paddingX = showMorePaddingX
+            rearrangeViews()
+        }
+    }
+    
+    @IBInspectable public dynamic var showMoreBorderColor: UIColor? {
+        didSet {
+            showMore.borderColor = showMoreBorderColor
+        }
+    }
     
     @IBInspectable public dynamic var textColor: UIColor = UIColor.whiteColor() {
         didSet {
@@ -194,19 +249,16 @@ public class TagListView: UIView {
     public private(set) var tagViews: [TagView] = []
     private(set) var tagBackgroundViews: [UIView] = []
     private(set) var rowViews: [UIView] = []
-    private(set) var tagViewHeight: CGFloat = 0
-    private(set) var rows = 0 {
+    var tagViewHeight: CGFloat = 0
+    public var lineNumber: UInt! = 0 {
+        didSet {
+            rearrangeViews()
+        }
+    }
+    private(set) var rows: UInt = 0 {
         didSet {
             invalidateIntrinsicContentSize()
         }
-    }
-    
-    // MARK: - Interface Builder
-    
-    public override func prepareForInterfaceBuilder() {
-        addTag("Welcome")
-        addTag("to")
-        addTag("TagListView").selected = true
     }
     
     // MARK: - Layout
@@ -222,17 +274,27 @@ public class TagListView: UIView {
         for view in views {
             view.removeFromSuperview()
         }
+        showMore.removeFromSuperview()
         rowViews.removeAll(keepCapacity: true)
-        
-        var currentRow = 0
+
+        var currentRow: UInt = 0
         var currentRowView: UIView!
         var currentRowTagCount = 0
         var currentRowWidth: CGFloat = 0
-        for (index, tagView) in tagViews.enumerate() {
+        for (index, nextTagView) in tagViews.enumerate() {
+            var tagView = nextTagView
             tagView.frame.size = tagView.intrinsicContentSize()
             tagViewHeight = tagView.frame.height
-            
-            if currentRowTagCount == 0 || currentRowWidth + tagView.frame.width > frame.width {
+            showMore.setTitle("\(tagViews.count - index) MORE...", forState: .Normal)
+            if lineNumber != 0
+                && lineNumber <= currentRow { // is full
+                showMore.frame.size = showMore.intrinsicContentSize()
+                if frame.width != 0 && currentRowWidth + showMore.frame.width > frame.width {
+                    NSException(name: "Tag name is too long", reason: "I don't know how to deal with this situation", userInfo: nil).raise()
+                } else if currentRowWidth + tagView.frame.width + showMore.frame.width + marginX > frame.width {
+                    tagView = showMore
+                }
+            } else if currentRowTagCount == 0 || currentRowWidth + tagView.frame.width > frame.width {
                 currentRow += 1
                 currentRowWidth = 0
                 currentRowTagCount = 0
@@ -242,18 +304,22 @@ public class TagListView: UIView {
                 rowViews.append(currentRowView)
                 addSubview(currentRowView)
             }
-            
             let tagBackgroundView = tagBackgroundViews[index]
-            tagBackgroundView.frame.origin = CGPoint(x: currentRowWidth, y: 0)
+            if tagView == showMore {
+                tagBackgroundView.frame.origin = CGPoint(x: currentRowWidth, y: (currentRowView.frame.size.height - tagView.bounds.size.height) / 2 )
+            } else {
+                tagBackgroundView.frame.origin = CGPoint(x: currentRowWidth, y: 0)
+            }
             tagBackgroundView.frame.size = tagView.bounds.size
             tagBackgroundView.layer.shadowColor = shadowColor.CGColor
             tagBackgroundView.layer.shadowPath = UIBezierPath(roundedRect: tagBackgroundView.bounds, cornerRadius: cornerRadius).CGPath
             tagBackgroundView.layer.shadowOffset = shadowOffset
             tagBackgroundView.layer.shadowOpacity = shadowOpacity
             tagBackgroundView.layer.shadowRadius = shadowRadius
+            
             tagBackgroundView.addSubview(tagView)
             currentRowView.addSubview(tagBackgroundView)
-            
+
             currentRowTagCount += 1
             currentRowWidth += tagView.frame.width + marginX
             
@@ -267,6 +333,10 @@ public class TagListView: UIView {
             }
             currentRowView.frame.size.width = currentRowWidth
             currentRowView.frame.size.height = max(tagViewHeight, currentRowView.frame.height)
+            
+            if tagView == showMore {
+                break
+            }
         }
         rows = currentRow
         
@@ -276,16 +346,33 @@ public class TagListView: UIView {
     // MARK: - Manage tags
     
     public override func intrinsicContentSize() -> CGSize {
-        var height = CGFloat(rows) * (tagViewHeight + marginY)
+        var height: CGFloat
+        if lineNumber == 0 {
+            height = CGFloat(rows) * (tagViewHeight + marginY)
+        } else {
+            height = CGFloat(min(rows, lineNumber)) * (tagViewHeight + marginY)
+        }
+        
         if rows > 0 {
             height -= marginY
         }
         return CGSizeMake(frame.width, height)
     }
     
-    public func addTag(title: String) -> TagView {
-        let tagView = TagView(title: title)
-        
+    public func setupShowMore() {
+        let tagView = showMore
+        tagView.textColor = showMoreTextColor
+        tagView.textFont = showMoreFont
+        tagView.borderWidth = showMoreBorderWidth
+        tagView.borderColor = showMoreBorderColor
+        tagView.cornerRadius = cornerRadius
+        tagView.paddingX = showMorePaddingX
+        tagView.paddingY = paddingY
+        tagView.tagBackgroundColor = UIColor.clearColor()
+        tagView.addTarget(self, action: #selector(tagPressed(_:)), forControlEvents: .TouchUpInside)
+    }
+    
+    public func setupTagView(tagView: TagView) {
         tagView.textColor = textColor
         tagView.selectedTextColor = selectedTextColor
         tagView.tagBackgroundColor = tagBackgroundColor
@@ -311,6 +398,21 @@ public class TagListView: UIView {
                 tag.selected = (tag == this)
             }
         }
+    }
+    
+    public func addTags(titles: [String]) {
+        for title in titles {
+            let tagView = TagView(title: title)
+            setupTagView(tagView)
+            tagViews.append(tagView)
+            tagBackgroundViews.append(UIView(frame: tagView.bounds))
+        }
+        rearrangeViews()
+    }
+    
+    public func addTag(title: String) -> TagView {
+        let tagView = TagView(title: title)
+        setupTagView(tagView)
         return addTagView(tagView)
     }
     
