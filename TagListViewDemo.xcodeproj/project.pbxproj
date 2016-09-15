@@ -18,9 +18,9 @@
 		1AD1770C1B6D73E70081F615 /* TagListView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD176F41B6D73E70081F615 /* TagListView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1AD177141B6D74570081F615 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6076DE1AFED38F009EA00E /* TagView.swift */; };
 		1AD177151B6D745B0081F615 /* TagListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6076E21AFED866009EA00E /* TagListView.swift */; };
+		5FF423E11D8B93D700A87AE5 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF423E01D8B93D700A87AE5 /* CloseButton.swift */; };
+		5FFCD98D1DA707BA00CE8C69 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF423E01D8B93D700A87AE5 /* CloseButton.swift */; };
 		90A878531BA1EBA1001C8989 /* TagListView.h in Headers */ = {isa = PBXBuildFile; fileRef = 90A878521BA1EBA1001C8989 /* TagListView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FFBD46391C6E1AA60045684A /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBD46381C6E1AA60045684A /* CloseButton.swift */; };
-		FFBD463A1C6E1AB50045684A /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBD46381C6E1AA60045684A /* CloseButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,8 +59,8 @@
 		1A6076E21AFED866009EA00E /* TagListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TagListView.swift; path = TagListView/TagListView.swift; sourceTree = SOURCE_ROOT; };
 		1AD176F41B6D73E70081F615 /* TagListView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TagListView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AD176F71B6D73E70081F615 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5FF423E01D8B93D700A87AE5 /* CloseButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CloseButton.swift; path = TagListView/CloseButton.swift; sourceTree = SOURCE_ROOT; };
 		90A878521BA1EBA1001C8989 /* TagListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagListView.h; sourceTree = "<group>"; };
-		FFBD46381C6E1AA60045684A /* CloseButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,7 +127,7 @@
 			children = (
 				1A6076DE1AFED38F009EA00E /* TagView.swift */,
 				1A6076E21AFED866009EA00E /* TagListView.swift */,
-				FFBD46381C6E1AA60045684A /* CloseButton.swift */,
+				5FF423E01D8B93D700A87AE5 /* CloseButton.swift */,
 			);
 			name = TagListView;
 			sourceTree = "<group>";
@@ -212,9 +212,11 @@
 				TargetAttributes = {
 					1A6076B81AFED303009EA00E = {
 						CreatedOnToolsVersion = 6.3.1;
+						LastSwiftMigration = 0800;
 					};
 					1AD176F31B6D73E70081F615 = {
 						CreatedOnToolsVersion = 6.4;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -262,7 +264,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFBD46391C6E1AA60045684A /* CloseButton.swift in Sources */,
+				5FF423E11D8B93D700A87AE5 /* CloseButton.swift in Sources */,
 				1A6076C11AFED303009EA00E /* ViewController.swift in Sources */,
 				1A6076BF1AFED303009EA00E /* AppDelegate.swift in Sources */,
 				1A6076DF1AFED38F009EA00E /* TagView.swift in Sources */,
@@ -274,7 +276,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFBD463A1C6E1AB50045684A /* CloseButton.swift in Sources */,
+				5FFCD98D1DA707BA00CE8C69 /* CloseButton.swift in Sources */,
 				1AD177141B6D74570081F615 /* TagView.swift in Sources */,
 				1AD177151B6D745B0081F615 /* TagListView.swift in Sources */,
 			);
@@ -402,6 +404,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "build.ela.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -413,6 +416,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "build.ela.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -434,6 +438,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "build.ela.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -453,6 +458,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "build.ela.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
