@@ -124,17 +124,12 @@ open class TagListView: UIView {
             tagViewHeight = tagView.frame.height
             showMore.setTitle("\(tagViews.count - index) MORE...", for: UIControlState())
             
-//            print(">>>>>>> \(tagView.titleLabel?.text) \(showMore.titleLabel?.text)")
-//            if tagView.titleLabel?.text == "Tag - 4"
-//                && showMore.titleLabel?.text == "1 MORE..."{
-//                print("<<<<")
-//            }
-            
             if lineNumber != 0
                 && lineNumber <= currentRow { // is full
                 showMore.frame.size = showMore.intrinsicContentSize
                 if frame.width != 0 && currentRowWidth + showMore.frame.width > frame.width {
-                    NSException(name: NSExceptionName(rawValue: "Tag name is too long"), reason: "I don't know how to deal with this situation", userInfo: nil).raise()
+                    print("Warning !!!  Tag name is too long, I don't know how to deal with this situation. Tag name: \(String(describing: tagView.titleLabel?.text))")
+                    tagView = showMore
                 } else if currentRowWidth + tagView.frame.width + showMore.frame.width + marginX > frame.width
                     && !(index + 1 == tagViews.count
                         && currentRowWidth + tagView.frame.width <= frame.width) {
