@@ -95,7 +95,6 @@ open class TagListView: UIView {
     }
     
     open func relayoutSubviews() {
-        refreshStyle()
         rearrangeViews()
     }
     
